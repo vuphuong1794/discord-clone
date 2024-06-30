@@ -1,5 +1,4 @@
 import { Text } from '@mantine/core'
-import './App.css'
 
 function App() {
 
