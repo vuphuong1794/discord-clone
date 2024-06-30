@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom'
 const RouteLayout = () => {
   return (
     <div>
-      Rootlayout
+      Rootla
       <Outlet/>
     </div>
   )
