@@ -1,17 +1,24 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import "./index.css";
-import "@mantine/core/styles.css";
-import { MantineProvider } from "@mantine/core";
+import React from "react"
+import ReactDOM from "react-dom/client"
+import "./index.css"
+import "@mantine/core/styles.css"
+import { MantineProvider } from "@mantine/core"
 import {
-  RedirectToSignIn,
-  SignedOut,
-  SignedIn,
   ClerkProvider,
-} from "@clerk/clerk-react";
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
-import RootLayout from "./layout/RootLayout.tsx";
-import HomePage from "./pages/HomePage.tsx";
+  RedirectToSignIn,
+  SignedIn,
+  SignedOut,
+} from "@clerk/clerk-react"
+import { Routes, Route, useNavigate, BrowserRouter } from "react-router-dom"
+import RootLayout from "./layouts/RootLayout.tsx"
+import HomePage from "./pages/HomePage.tsx"
+
+// Import your publishable key
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+
+if (!PUBLISHABLE_KEY) {
+  throw new Error("Missing Publishable Key")
+}
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -25,28 +32,28 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 };
 
 const RouterComponent = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   return (
-    <ClerkProvider
-      publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}
+    <ClerkProvider publishableKey={PUBLISHABLE_KEY}
       navigate={(to) => navigate(to)}
     >
       <Routes>
-        <Route path="/" element={<RootLayout />}>
-          <Route element={
-            <ProtectedRoute>
-              <HomePage/>
-            </ProtectedRoute>
-          }
-
+        <Route path="" element={<RootLayout />}>
+          <Route 
+            index
+            element={
+              <ProtectedRoute>
+                <HomePage/>
+              </ProtectedRoute>
+            }
           />
         </Route>
-
       </Routes>
     </ClerkProvider>
   );
 };
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <MantineProvider>
