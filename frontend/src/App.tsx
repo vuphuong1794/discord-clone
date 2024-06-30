@@ -4,7 +4,7 @@ import './App.css'
 function App() {
 
   return (
-    <Text>
+    <Text fw={700}>
       hello word
     </Text>
   )
