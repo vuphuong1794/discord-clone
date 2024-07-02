@@ -12,6 +12,7 @@ import {
 import { Routes, Route, useNavigate, BrowserRouter } from "react-router-dom"
 import RootLayout from "./layouts/RootLayout.tsx"
 import HomePage from "./pages/HomePage.tsx"
+import CreateServerModal from "./components/modals/CreateServerModal.tsx";
 
 // Import your publishable key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
@@ -44,6 +45,7 @@ const RouterComponent = () => {
             index
             element={
               <ProtectedRoute>
+                <CreateServerModal/>
                 <HomePage/>
               </ProtectedRoute>
             }

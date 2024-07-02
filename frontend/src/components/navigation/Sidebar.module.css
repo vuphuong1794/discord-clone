@@ -1,5 +1,5 @@
 .navbar {
-    width: 5.7rem;
+    width: 5rem;
     height: 100vh;
     inset: 0 auto 0 0;
     position: fixed;
@@ -14,8 +14,9 @@
 }
 
 .link{
-    width: 4rem;
-    height: 4rem;
+    padding: 0;
+    width: 3rem;
+    height: 3rem;
     color: light-dark(
         var(--mantine-color-gray-7),
         var(--mantine-color-dark-0)
@@ -28,7 +29,6 @@
         light-dark(
             var(--mantine-color-gray-2),
             var(--mantine-color-dark-5)
-        );
-          
+        );  
     }
 }

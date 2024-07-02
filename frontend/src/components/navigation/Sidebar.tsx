@@ -1,9 +1,13 @@
-import React from "react";
+import { UserButton } from "@clerk/clerk-react";
 import classes from "./Sidebar.module.css";
-import { Button, Center } from "@mantine/core";
-import { IconArrowsJoin, IconPlus } from "@tabler/icons-react";
+import { Button, Center, Stack, useMantineColorScheme } from "@mantine/core";
+import { IconArrowsJoin, IconMoon, IconPlus, IconSun } from "@tabler/icons-react";
+import { useModal } from "../../hooks/useModal";
 
 function Sidebar() {
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+ const createSeverModal = useModal("CreateServer");
+
   return (
     <nav className={classes.navbar}>
       <Center>
@@ -11,7 +15,7 @@ function Sidebar() {
           className={classes.link}
           variant="subtle"
           radius={100}
-          onClick={() => {}}
+          onClick={createSeverModal.openModal}
         >
           <IconPlus radius={100} />
         </Button>
@@ -26,6 +30,19 @@ function Sidebar() {
           <IconArrowsJoin radius={100} />
         </Button>
       </Center>
+
+      <Stack justify="center" align="center">
+        <Button 
+          className={classes.link} 
+          variant="subtle" 
+          onClick={toggleColorScheme} 
+          radius={100} 
+          p={0}
+        >
+          {colorScheme === "dark" ? <IconMoon radius={100} /> : <IconSun radius={100} />}
+        </Button>
+        <UserButton />
+      </Stack>
     </nav>
   );
 }
