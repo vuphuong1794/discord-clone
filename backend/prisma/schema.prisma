@@ -12,3 +12,139 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+//thong tin chi tiet
+model Profile {
+  id       Int    @id @default(autoincrement())
+  name     String
+  imageUrl String
+  email    String @unique
+
+  servers  Server[]
+  members  Member[]
+  channels Channel[]
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+}
+
+model Server {
+  id         Int     @id @default(autoincrement())
+  name       String
+  imageUrl   String
+  inviteCode String  @unique
+  profileId  Int
+  profile    Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  members  Member[]
+  channels Channel[]
+
+  createdAt     DateTime        @default(now())
+  updateAt      DateTime        @updatedAt
+
+  @@index([profileId])
+}
+
+enum MemberRole {
+  ADMIN
+  MODERATOR
+  GUEST
+}
+
+model Member {
+  id        Int     @id @default(autoincrement())
+  profileId Int
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  serverId Int
+  server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
+
+  messages        Message[]
+  directMessagess DirectMessage[]
+
+  createdAt             DateTime       @default(now())
+  updateAt              DateTime       @updatedAt
+  Conversation          Conversation[]
+  ConversationInitiated Conversation[] @relation("MemberOne")
+  ConversationReceived  Conversation[] @relation("MemberTwo")
+
+  @@index([profileId, serverId])
+}
+
+enum ChannelType {
+  TEXT
+  AUDIO
+  VIDEO
+}
+
+model Channel {
+  id        Int         @id @default(autoincrement())
+  name      String
+  type      ChannelType @default(TEXT)
+  profileId Int
+  profile   Profile     @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  serverId Int
+  server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
+
+  messages Message[]
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  @@index([profileId, serverId])
+}
+
+model Message {
+  id       Int     @id @default(autoincrement())
+  content  String
+  fileUrl  String?
+  memberId Int
+  member   Member  @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  channelId Int
+  channel   Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  deleted Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  @@index([memberId, channelId])
+}
+
+model DirectMessage {
+  id       Int     @id @default(autoincrement())
+  content  String
+  file     String?
+  memberId Int
+  member   Member  @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  conversationId Int
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  deleted Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  @@index([memberId, conversationId])
+}
+
+model Conversation {
+  id          Int    @id @default(autoincrement())
+  memberOneId Int
+  memberOne   Member @relation("MemberOne", fields: [memberOneId], references: [id], onDelete: Cascade)
+
+  memberTwoId Int
+  memberTwo   Member @relation("MemberTwo", fields: [memberTwoId], references: [id], onDelete: Cascade)
+
+  DirectMessage DirectMessage[]
+
+  deleted  Boolean @default(false)
+  Member   Member? @relation(fields: [memberId], references: [id])
+  memberId Int?
+
+  @@unique([memberOneId, memberTwoId])
+  @@index([memberOneId, memberTwoId])
+}
