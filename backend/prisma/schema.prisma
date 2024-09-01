@@ -34,6 +34,7 @@ model Server {
   imageUrl   String
   inviteCode String  @unique
   profileId  Int
+  //ondelete cascade: khi profile bị xóa thì server cũng bị xóa theo
   profile    Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   members  Member[]
