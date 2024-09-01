@@ -17,6 +17,7 @@ async function bootstrap() {
     ]
   })
   app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 1 }));
+  
   await app.listen(3000);
   logger.log('Server running on port 3000');
 }
